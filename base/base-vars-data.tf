@@ -1,11 +1,14 @@
+# The backend data is filled in dynamically by Terragrunt
+terraform {
+  backend "s3" {}
+}
+
 variable "namespace" {
   default = "rcdf"
 }
 
-variable "region" {
-  default = "us-west-2"
+data "aws_region" "current" {
+  current = true
 }
 
-terraform {
-  backend "s3" {}
-}
+data "aws_caller_identity" "current" {}
