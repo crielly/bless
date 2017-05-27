@@ -10,4 +10,7 @@ indent_size = 2
 [*.tf]
 indent_size = 2
 
+[*.tfvars]
+indent_size = 2
+
 insert_final_newline = true
