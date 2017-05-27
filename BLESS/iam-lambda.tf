@@ -1,6 +1,6 @@
 resource "aws_iam_role" "BLESS-lambda" {
-  name = "BLESS-lambda-${data.aws_region.current.name}"
-  description = "BLESS-lambda-${data.aws_region.current.name}"
+  name = "BLESS-lambda-${var.REGION}"
+  description = "BLESS-lambda-${var.REGION}"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -20,8 +20,8 @@ EOF
 }
 
 resource "aws_iam_policy" "BLESS-lambda" {
-  name        = "BLESS-lambda-${data.aws_region.current.name}"
-  description = "BLESS-lambda-${data.aws_region.current.name}"
+  name        = "BLESS-lambda-${var.REGION}"
+  description = "BLESS-lambda-${var.REGION}"
   policy = <<EOF
 {
   "Version": "2012-10-17",

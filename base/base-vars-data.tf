@@ -3,6 +3,8 @@ terraform {
   backend "s3" {}
 }
 
+variable "REGION" {}
+
 variable "namespace" {
   default = "rcdf"
 }
@@ -16,8 +18,8 @@ data "aws_caller_identity" "current" {}
 data "terraform_remote_state" "iam-global" {
     backend    = "s3"
     config {
-        bucket = "${var.namespace}-tfstate.${data.aws_region.current.name}"
+        bucket = "${var.namespace}-tfstate.${var.REGION}"
         key    = "iam-global/terraform.tfstate"
-        region = "${data.aws_region.current.name}"
+        region = "${var.REGION}"
     }
 }

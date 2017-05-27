@@ -1,6 +1,6 @@
 resource "aws_iam_role" "BLESS-kms" {
-  name = "BLESS-kms-us-west-2"
-  description = "BLESS-kms-us-west-2"
+  name = "BLESS-kms-${var.REGION}"
+  description = "BLESS-kms-${var.REGION}"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -8,7 +8,7 @@ resource "aws_iam_role" "BLESS-kms" {
     {
       "Action": "sts:AssumeRole",
       "Principal": {
-        "AWS": "${data.terraform_remote_state.iam-global.operations-arn}"
+        "AWS": "${data.aws_caller_identity.current.account_id}"
       },
       "Effect": "Allow",
       "Sid": ""
@@ -19,8 +19,8 @@ EOF
 }
 
 resource "aws_iam_policy" "BLESS-kms-encrypt" {
-  name        = "BLESS-kms-encrypt-us-west-2"
-  description = "BLESS-kms-encrypt-us-west-2"
+  name        = "BLESS-kms-encrypt-${var.REGION}"
+  description = "BLESS-kms-encrypt-${var.REGION}"
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -34,7 +34,7 @@ resource "aws_iam_policy" "BLESS-kms-encrypt" {
     "Condition": {
       "StringEquals": {
         "kms:EncryptionContext:to": [
-          "bless-${data.aws_region.current.name}"
+          "bless-${var.REGION}"
         ],
         "kms:EncryptionContext:user_type": "user",
         "kms:EncryptionContext:from": "$${aws:username}"

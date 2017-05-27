@@ -1,13 +1,13 @@
 resource "aws_kms_key" "BLESS" {
-  description             = "BLESS KMS for ${data.aws_region.current.name}"
+  description             = "BLESS KMS for ${var.REGION}"
   deletion_window_in_days = 10
   tags {
-    Name      = "BLESS-${data.aws_region.current.name}"
+    Name      = "BLESS-${var.REGION}"
     Terraform = "True"
   }
 }
 
 resource "aws_kms_alias" "BLESS" {
-  name          = "alias/BLESS-${data.aws_region.current.name}"
+  name          = "alias/BLESS-${var.REGION}"
   target_key_id = "${aws_kms_key.BLESS.key_id}"
 }
