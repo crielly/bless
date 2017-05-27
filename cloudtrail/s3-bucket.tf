@@ -1,8 +1,8 @@
 resource "aws_s3_bucket" "cloudtrail" {
-  bucket = "rcdf-cloudtrail"
+  bucket = "${var.namespace}-cloudtrail"
 
   tags {
-    Name        = "rcdf-cloudtrail"
+    Name        = "${var.namespace}-cloudtrail"
     Environment = "global"
     Terraform   = "True"
   }

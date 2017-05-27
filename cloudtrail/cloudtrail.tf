@@ -4,7 +4,7 @@ resource "aws_cloudtrail" "global-trail" {
   include_global_service_events = true
   is_multi_region_trail         = true
   tags {
-    Name        = "rcdf-cloudtrail"
+    Name        = "${var.namespace}-cloudtrail"
     Environment = "global"
     Terraform   = "True"
   }
