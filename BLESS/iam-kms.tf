@@ -1,6 +1,7 @@
 resource "aws_iam_role" "BLESS-kms" {
-  name = "BLESS-kms-${var.REGION}"
+  name        = "BLESS-kms-${var.REGION}"
   description = "BLESS-kms-${var.REGION}"
+
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -21,6 +22,7 @@ EOF
 resource "aws_iam_policy" "BLESS-kms-encrypt" {
   name        = "BLESS-kms-encrypt-${var.REGION}"
   description = "BLESS-kms-encrypt-${var.REGION}"
+
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -51,4 +53,32 @@ EOF
 resource "aws_iam_role_policy_attachment" "BLESS-kms-encrypt" {
   role       = "${aws_iam_role.BLESS-kms.name}"
   policy_arn = "${aws_iam_policy.BLESS-kms-encrypt.arn}"
+}
+
+resource "aws_iam_policy" "BLESS-kms-decrypt" {
+  name        = "BLESS-kms-decrypt-${var.REGION}"
+  description = "BLESS-kms-decrypt-${var.REGION}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowKMSDecryption",
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt"
+      ],
+      "Resource": [
+        "${aws_kms_key.BLESS.arn}"
+      ]
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "BLESS-kms-decrypt" {
+  role       = "${aws_iam_role.BLESS-lambda.name}"
+  policy_arn = "${aws_iam_policy.BLESS-kms-decrypt.arn}"
 }
