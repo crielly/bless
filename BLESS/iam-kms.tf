@@ -67,7 +67,8 @@ resource "aws_iam_policy" "BLESS-kms-decrypt" {
       "Sid": "AllowKMSDecryption",
       "Effect": "Allow",
       "Action": [
-        "kms:Decrypt"
+        "kms:Decrypt",
+        "kms:DescribeKey"
       ],
       "Resource": [
         "${aws_kms_key.BLESS.arn}"
