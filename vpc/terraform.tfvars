@@ -1,0 +1,1 @@
+../base/terraform.tfvars
