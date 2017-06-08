@@ -1,2 +1,4 @@
 # Compiled files
 *.tfstate.backup
+
+ansible/roles/common/*
