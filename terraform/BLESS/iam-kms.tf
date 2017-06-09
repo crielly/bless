@@ -9,7 +9,7 @@ resource "aws_iam_role" "BLESS-kms" {
     {
       "Action": "sts:AssumeRole",
       "Principal": {
-        "AWS": "${data.aws_caller_identity.current.account_id}"
+        "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
       },
       "Effect": "Allow",
       "Sid": ""

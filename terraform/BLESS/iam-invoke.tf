@@ -1,6 +1,7 @@
 resource "aws_iam_role" "BLESS-invoke" {
-  name = "BLESS-invoke-${var.REGION}"
+  name        = "BLESS-invoke-${var.REGION}"
   description = "BLESS-invoke-${var.REGION}"
+
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -8,7 +9,7 @@ resource "aws_iam_role" "BLESS-invoke" {
     {
       "Action": "sts:AssumeRole",
       "Principal": {
-        "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/crielly"
+        "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
       },
       "Effect": "Allow",
       "Sid": ""
@@ -21,6 +22,7 @@ EOF
 resource "aws_iam_policy" "BLESS-invoke" {
   name        = "BLESS-invoke-${var.REGION}"
   description = "BLESS-invoke-${var.REGION}"
+
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -43,6 +45,7 @@ EOF
 resource "aws_iam_policy" "BLESS-assume-invoke-role" {
   name        = "BLESS-STS-${var.REGION}"
   description = "BLESS-STS-${var.REGION}"
+
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -63,7 +66,7 @@ EOF
 }
 
 resource "aws_iam_group_policy_attachment" "BLESS-assume-invoke" {
-  group = "Operations"
+  group      = "Operations"
   policy_arn = "${aws_iam_policy.BLESS-assume-invoke-role.arn}"
 }
 
