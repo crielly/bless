@@ -1,0 +1,17 @@
+---
+- hosts: all
+  become: true
+  gather_facts: false
+
+  pre_tasks:
+
+  - name: Gather facts
+    setup:
+
+  - name: Gather ec2 facts
+    ec2_facts:
+
+  roles:
+#    - { role: common/base-server, tags: ['base-server'] }
+    - { role: iamsync, tags: ['iamsync'] }
+    - { role: bless-ca, tags: ['bless-ca'] }

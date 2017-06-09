@@ -1,0 +1,32 @@
+{
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "region": "us-east-1",
+      "ami_regions": ["us-east-1"],
+      "source_ami_filter": {
+          "filters": {
+            "name": "*ssd/ubuntu-trusty-14.04-amd64-server*",
+            "architecture": "x86_64",
+            "virtualization-type": "hvm",
+            "root-device-type": "ebs"
+          },
+          "owners": ["099720109477"],
+          "most_recent": true
+      },
+      "ami_virtualization_type": "hvm",
+      "force_deregister": true,
+      "instance_type": "m3.medium",
+      "ssh_username": "ubuntu",
+      "ami_name": "base-server-bless_{{timestamp}}"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "ansible",
+      "playbook_file": "base-server.yml",
+      "groups": ["all"],
+      "user": "ubuntu"
+    }
+  ]
+}

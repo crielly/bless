@@ -1,0 +1,13 @@
+- name: Tell sshd about our file full of trusted CA pubkeys
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    line: 'TrustedUserCAKeys /etc/ssh/cas.pub'
+  notify: reload ssh
+
+- name: lay down file full of trusted CA pubkeys
+  template:
+    src: cas.pub.j2
+    dest: /etc/ssh/cas.pub
+    owner: root
+    mode: 0600
+  notify: reload ssh

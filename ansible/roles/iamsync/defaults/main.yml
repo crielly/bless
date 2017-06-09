@@ -1,0 +1,10 @@
+iam_groups:
+  - name: devs
+    groupid: 30000
+    sudo: false
+  - name: operations
+    groupid: 31000
+    sudo: true
+
+iam_pathprefix: "/iamsync/"
+iamsync_logdir: /var/log/

@@ -1,0 +1,63 @@
+- name: Ensure latest version of pip
+  apt:
+    pkg: python-pip
+    state: latest
+
+- name: Ensure iamsync dependencies are present
+  pip:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - docopt
+    - boto3
+
+- name: copy iamsync.py to disk
+  copy:
+    src: iamsync.py
+    dest: /usr/local/lib/iamsync.py
+    owner: root
+    group: root
+    mode: 0500
+
+- name: Create iam_groups locally
+  group:
+    name: "{{ item.name }}"
+    state: present
+    gid: "{{ item.groupid }}"
+  with_items: "{{ iam_groups }}"
+
+- name: Allow specified groups to sudo
+  template:
+    src: sudoers.j2
+    dest: /etc/sudoers.d/sudoers
+    validate: 'visudo -cf %s'
+    mode: 0440
+
+- name: ensure iamsync.py runs every x minutes
+  cron:
+    name: "Run iamsync.py every 10 minutes"
+    minute: "*/10"
+    user: root
+    job: "/usr/bin/python /usr/local/lib/iamsync.py {{ iam_pathprefix }} --logdir={{ iamsync_logdir }}"
+
+- name: ensure iamsync.py runs on boot
+  cron:
+    name: "Run iamsync.py at boot"
+    special_time: reboot
+    user: root
+    job: "/usr/bin/python /usr/local/lib/iamsync.py {{ iam_pathprefix }} --logdir={{ iamsync_logdir }}"
+
+- name: set SHELL in root crontab
+  cronvar:
+    user: root
+    name: SHELL
+    value: /bin/bash
+    state: present
+
+- name: set PATH in root crontab
+  cronvar:
+    user: root
+    name: PATH
+    value: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    state: present
+
