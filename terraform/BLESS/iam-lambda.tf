@@ -45,3 +45,32 @@ resource "aws_iam_role_policy_attachment" "BLESS-lambda" {
   role       = "${aws_iam_role.BLESS-lambda.name}"
   policy_arn = "${aws_iam_policy.BLESS-lambda.arn}"
 }
+
+resource "aws_iam_policy" "BLESS-kms-decrypt" {
+  name        = "BLESS-kms-decrypt-${var.REGION}"
+  description = "BLESS-kms-decrypt-${var.REGION}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowKMSDecryption",
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt",
+        "kms:DescribeKey"
+      ],
+      "Resource": [
+        "${aws_kms_key.BLESS.arn}"
+      ]
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "BLESS-kms-decrypt" {
+  role       = "${aws_iam_role.BLESS-lambda.name}"
+  policy_arn = "${aws_iam_policy.BLESS-kms-decrypt.arn}"
+}
