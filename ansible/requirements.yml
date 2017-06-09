@@ -1,7 +1,0 @@
----
-# pull down common roles
-
-- src: git@github.com:crielly/ansible-roles.git
-  name: common
-  version: master
-  scm: git
