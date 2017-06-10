@@ -25,3 +25,16 @@ resource "aws_iam_group_policy_attachment" "devs-powerusers" {
 output "devs-arn" {
   value = "${aws_iam_group.devs.arn}"
 }
+
+resource "aws_iam_group" "billing" {
+  name = "billing"
+}
+
+resource "aws_iam_group_policy_attachment" "billing" {
+  group      = "${aws_iam_group.billing.name}"
+  policy_arn = "arn:aws:iam::aws:policy/job-function/Billing"
+}
+
+output "billing-arn" {
+  value = "${aws_iam_group.billing.arn}"
+}
