@@ -19,6 +19,15 @@
     group: root
     mode: 0500
 
+
+- name: Implement logrotate for iamsync.log
+  template:
+    src: iamsync-logrotate.j2
+    dest: /etc/logrotate.d/iamsync
+    owner: root
+    group: root
+    mode: 0644
+
 - name: Create iam_groups locally
   group:
     name: "{{ item.name }}"
@@ -38,14 +47,14 @@
     name: "Run iamsync.py every 10 minutes"
     minute: "*/10"
     user: root
-    job: "/usr/bin/python /usr/local/lib/iamsync.py {{ iam_pathprefix }} --logdir={{ iamsync_logdir }}"
+    job: "/usr/bin/python /usr/local/lib/iamsync.py {{ iam_pathprefix }}"
 
 - name: ensure iamsync.py runs on boot
   cron:
     name: "Run iamsync.py at boot"
     special_time: reboot
     user: root
-    job: "/usr/bin/python /usr/local/lib/iamsync.py {{ iam_pathprefix }} --logdir={{ iamsync_logdir }}"
+    job: "/usr/bin/python /usr/local/lib/iamsync.py {{ iam_pathprefix }}"
 
 - name: set SHELL in root crontab
   cronvar:
@@ -60,4 +69,3 @@
     name: PATH
     value: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     state: present
-

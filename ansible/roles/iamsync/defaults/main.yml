@@ -1,3 +1,5 @@
+# These groups must match the names of IAM groups and exist at the iam_pathprefix
+# path within IAM if you are doing ListAllGroups within that prefixpath
 iam_groups:
   - name: devs
     groupid: 30000
@@ -7,4 +9,4 @@ iam_groups:
     sudo: true
 
 iam_pathprefix: "/iamsync/"
-iamsync_logdir: /var/log/
+iamsync_logpath: /var/log/iamsync.log

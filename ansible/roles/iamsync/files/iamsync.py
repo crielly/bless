@@ -4,7 +4,7 @@ Given an IAM path prefix, this script will fetch a list of groups in that path
 and then fetch the members of those groups and ensure that they match the members
 in the matching local unix groups.
 Usage:
-    iamsync.py <pathprefix> (--logdir=<l>)
+    iamsync.py <pathprefix> --logpath=<l>
 """
 
 import boto3, pwd, grp, logging, logging.handlers, subprocess
@@ -21,6 +21,8 @@ def get_local_group_membership(groupname):
         _LOGGER.error(e)
 
 def get_iam_groups(pathprefix):
+    # Construct a list of IAM groups to sync by listing all groups present
+    # at the designated IAM path prefix
     try:
         iamgroups = []
         iam = boto3.client('iam')
@@ -29,7 +31,7 @@ def get_iam_groups(pathprefix):
             iamgroups.append(g['GroupName'])
         return iamgroups
     except Exception as e:
-        print e
+        _LOGGER.error(e)
 
 def remove_defunct_users(groups):
     allusers = pwd.getpwall()
@@ -130,11 +132,15 @@ if __name__ == '__main__':
     # Parse Docopts
     args = docopt(__doc__)
     pathprefix = args['<pathprefix>']
-    logdir = args['--logdir']
+    
+    if args['--logpath']:
+        logpath = args['logpath']
+    else:
+        logpath = "/var/log/iamsync.log"
 
     _LOGGER.setLevel(logging.INFO)
     py_hdlr = logging.handlers.WatchedFileHandler(
-        '{}/iamsync.log'.format(logdir), mode='a'
+        logpath, mode='a'
     )
     py_formatter = logging.Formatter(
         '%(asctime)s : %(levelname)s - %(message)s'

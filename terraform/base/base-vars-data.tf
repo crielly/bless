@@ -3,12 +3,17 @@ terraform {
   backend "s3" {}
 }
 
+# This is fed in by export TF_VAR_REGION=us-east-1
 variable "REGION" {}
 
 variable "namespace" {
   default = "rcdf"
 }
 
+# You can alternatively use the TF Data Source "aws_availability_zones"
+# https://www.terraform.io/docs/providers/aws/d/availability_zones.html
+# We deliberately map to certain AZs basically because we want to reuse code
+# between regions, but us-east-1c has horrific spot pricing
 variable "zones" {
   type = "map"
 
@@ -18,10 +23,8 @@ variable "zones" {
   }
 }
 
-data "aws_region" "current" {
-  current = true
-}
-
+# Get information about your current account and caller ID
+# Mostly interpolated into IAM policies
 data "aws_caller_identity" "current" {}
 
 data "terraform_remote_state" "iam-global" {

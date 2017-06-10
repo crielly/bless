@@ -1,8 +1,8 @@
 resource "aws_s3_bucket" "cloudtrail" {
-  bucket = "${var.namespace}-cloudtrail"
+  bucket = "${var.namespace}-cloudtrail-${var.REGION}"
 
   tags {
-    Name        = "${var.namespace}-cloudtrail"
+    Name        = "${var.namespace}-cloudtrail-${var.REGION}"
     Environment = "global"
     Terraform   = "True"
   }
@@ -38,7 +38,7 @@ data "aws_iam_policy_document" "cloudtrail" {
       type        = "Service"
       identifiers = ["cloudtrail.amazonaws.com"]
     }
-    
+
     actions = [
       "s3:PutObject",
     ]

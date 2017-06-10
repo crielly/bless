@@ -5,7 +5,6 @@ resource "aws_cloudtrail" "global-trail" {
   is_multi_region_trail         = true
   tags {
     Name        = "${var.namespace}-cloudtrail"
-    Environment = "global"
     Terraform   = "True"
   }
 }
