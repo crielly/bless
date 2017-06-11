@@ -8,6 +8,11 @@ resource "aws_iam_group_policy_attachment" "operations-adminaccess" {
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
+resource "aws_iam_group_policy_attachment" "BLESS-invoke-operations" {
+  group      = "${aws_iam_group.operations.name}"
+  policy_arn = "${data.terraform_remote_state.BLESS.bless-invoke-arn}"
+}
+
 output "operations-arn" {
   value = "${aws_iam_group.operations.arn}"
 }
@@ -17,9 +22,9 @@ resource "aws_iam_group" "devs" {
   path = "/iamsync/"
 }
 
-resource "aws_iam_group_policy_attachment" "devs-powerusers" {
+resource "aws_iam_group_policy_attachment" "BLESS-invoke-devs" {
   group      = "${aws_iam_group.devs.name}"
-  policy_arn = "arn:aws:iam::aws:policy/PowerUserAccess"
+  policy_arn = "${data.terraform_remote_state.BLESS.bless-invoke-arn}"
 }
 
 output "devs-arn" {

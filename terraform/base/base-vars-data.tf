@@ -37,12 +37,12 @@ data "terraform_remote_state" "iam-global" {
   }
 }
 
-data "terraform_remote_state" "vpc" {
+data "terraform_remote_state" "BLESS" {
   backend = "s3"
 
   config {
     bucket = "${var.namespace}-tfstate.${var.REGION}"
-    key    = "vpc/terraform.tfstate"
+    key    = "BLESS/terraform.tfstate"
     region = "${var.REGION}"
   }
 }

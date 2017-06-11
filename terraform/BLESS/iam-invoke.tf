@@ -46,10 +46,34 @@ resource "aws_iam_policy" "BLESS-invoke" {
       "Resource": [
           "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/$${aws:username}"
       ]
+    },
+    {
+      "Sid": "AllowKMSEncryptIfMFAPresent",
+      "Action": "kms:Encrypt",
+      "Effect": "Allow",
+      "Resource": [
+        "${aws_kms_key.BLESS.arn}"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "kms:EncryptionContext:to": [
+            "bless"
+          ],
+          "kms:EncryptionContext:user_type": "user",
+          "kms:EncryptionContext:from": "$${aws:username}"
+        },
+        "Bool": {
+          "aws:MultiFactorAuthPresent": "true"
+        }
+      }
     }
   ]
 }
 EOF
+}
+
+output "bless-invoke-arn" {
+  value = "${aws_iam_policy.BLESS-invoke.arn}"
 }
 
 resource "aws_iam_policy" "BLESS-assume-invoke-role" {
@@ -73,11 +97,6 @@ resource "aws_iam_policy" "BLESS-assume-invoke-role" {
   ]
 }
 EOF
-}
-
-resource "aws_iam_group_policy_attachment" "BLESS-assume-invoke" {
-  group      = "Operations"
-  policy_arn = "${aws_iam_policy.BLESS-assume-invoke-role.arn}"
 }
 
 resource "aws_iam_role_policy_attachment" "BLESS-invoke" {
