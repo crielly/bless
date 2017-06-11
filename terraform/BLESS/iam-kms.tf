@@ -36,7 +36,7 @@ resource "aws_iam_policy" "BLESS-kms-encrypt" {
     "Condition": {
       "StringEquals": {
         "kms:EncryptionContext:to": [
-          "bless-${var.REGION}"
+          "bless"
         ],
         "kms:EncryptionContext:user_type": "user",
         "kms:EncryptionContext:from": "$${aws:username}"

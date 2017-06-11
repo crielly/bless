@@ -36,6 +36,16 @@ resource "aws_iam_policy" "BLESS-invoke" {
       "Resource": [
           "${aws_lambda_function.BLESS.arn}"
       ]
+    },
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Action": [
+          "iam:GetUser"
+      ],
+      "Resource": [
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/$${aws:username}"
+      ]
     }
   ]
 }
