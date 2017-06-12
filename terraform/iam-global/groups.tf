@@ -10,7 +10,7 @@ resource "aws_iam_group_policy_attachment" "operations-adminaccess" {
 
 resource "aws_iam_group_policy_attachment" "BLESS-invoke-operations" {
   group      = "${aws_iam_group.operations.name}"
-  policy_arn = "${data.terraform_remote_state.BLESS.bless-invoke-arn}"
+  policy_arn = "${data.terraform_remote_state.BLESS.bless-assume-arn}"
 }
 
 output "operations-arn" {
@@ -24,7 +24,7 @@ resource "aws_iam_group" "devs" {
 
 resource "aws_iam_group_policy_attachment" "BLESS-invoke-devs" {
   group      = "${aws_iam_group.devs.name}"
-  policy_arn = "${data.terraform_remote_state.BLESS.bless-invoke-arn}"
+  policy_arn = "${data.terraform_remote_state.BLESS.bless-assume-arn}"
 }
 
 output "devs-arn" {

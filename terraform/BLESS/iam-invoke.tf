@@ -66,26 +66,15 @@ resource "aws_iam_policy" "BLESS-invoke" {
           "aws:MultiFactorAuthPresent": "true"
         }
       }
-    },
-    {
-        "Sid": "AllowIndividualUserToListTheirOwnMFA",
-        "Effect": "Allow",
-        "Action": [
-            "iam:ListVirtualMFADevices",
-            "iam:ListMFADevices"
-        ],
-        "Resource": [
-            "arn:aws:iam::${data.aws_caller_identity.current.account_id}:mfa/*",
-            "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/$${aws:username}"
-        ]
     }
   ]
 }
 EOF
 }
 
-output "bless-invoke-arn" {
-  value = "${aws_iam_policy.BLESS-invoke.arn}"
+resource "aws_iam_role_policy_attachment" "BLESS-invoke" {
+  role       = "${aws_iam_role.BLESS-invoke.name}"
+  policy_arn = "${aws_iam_policy.BLESS-invoke.arn}"
 }
 
 resource "aws_iam_policy" "BLESS-assume-invoke-role" {
@@ -105,13 +94,24 @@ resource "aws_iam_policy" "BLESS-assume-invoke-role" {
       "Resource": [
           "${aws_iam_role.BLESS-invoke.arn}"
       ]
+    },
+        {
+        "Sid": "AllowIndividualUserToListTheirOwnMFA",
+        "Effect": "Allow",
+        "Action": [
+            "iam:ListVirtualMFADevices",
+            "iam:ListMFADevices"
+        ],
+        "Resource": [
+            "arn:aws:iam::${data.aws_caller_identity.current.account_id}:mfa/*",
+            "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/$${aws:username}"
+        ]
     }
   ]
 }
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "BLESS-invoke" {
-  role       = "${aws_iam_role.BLESS-invoke.name}"
-  policy_arn = "${aws_iam_policy.BLESS-invoke.arn}"
+output "bless-assume-arn" {
+  value = "${aws_iam_policy.BLESS-assume-invoke-role.arn}"
 }
