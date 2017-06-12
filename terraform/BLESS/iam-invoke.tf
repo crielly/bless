@@ -66,6 +66,18 @@ resource "aws_iam_policy" "BLESS-invoke" {
           "aws:MultiFactorAuthPresent": "true"
         }
       }
+    },
+    {
+        "Sid": "AllowIndividualUserToListTheirOwnMFA",
+        "Effect": "Allow",
+        "Action": [
+            "iam:ListVirtualMFADevices",
+            "iam:ListMFADevices"
+        ],
+        "Resource": [
+            "arn:aws:iam::${data.aws_caller_identity.current.account_id}:mfa/*",
+            "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/$${aws:username}"
+        ]
     }
   ]
 }
